@@ -1,17 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using CommandReminder.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace CommandReminder
 {
@@ -32,7 +25,7 @@ namespace CommandReminder
 
             services.AddControllers();
 
-            services.AddScoped<ICommanderRepository, MockCommanderRepository>();
+            services.AddScoped<ICommanderRepository, SqlCommanderRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
