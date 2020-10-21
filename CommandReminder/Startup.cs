@@ -1,3 +1,4 @@
+using AutoMapper;
 using CommandReminder.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -5,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 
 namespace CommandReminder
 {
@@ -24,6 +26,8 @@ namespace CommandReminder
                 (Configuration.GetConnectionString("default")));
 
             services.AddControllers();
+
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddScoped<ICommanderRepository, SqlCommanderRepository>();
         }
