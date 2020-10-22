@@ -2,6 +2,7 @@
 using CommandReminder.Data;
 using CommandReminder.Dtos;
 using CommandReminder.Models;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
@@ -61,6 +62,40 @@ namespace CommandReminder.Controllers
             _mapper.Map(commandUpdateDto, commandModelFromRepo);
 
             _repository.UpdateCommand(commandModelFromRepo);
+            _repository.SaveChanges();
+
+            return NoContent();
+        }
+
+        [HttpPatch("{id}")]
+        public ActionResult PartialCommandUpdate(int id, JsonPatchDocument<CommandUpdateDto> patchDocument)
+        {
+            var commandModelFromRepo = _repository.GetCommandById(id);
+            if (commandModelFromRepo is null)
+                return NotFound();
+
+            var commandToPatch = _mapper.Map<CommandUpdateDto>(commandModelFromRepo);
+            patchDocument.ApplyTo(commandToPatch, ModelState);
+
+            if (!TryValidateModel(commandToPatch))
+                return ValidationProblem(ModelState);
+
+            _mapper.Map(commandToPatch, commandModelFromRepo);
+            
+            _repository.UpdateCommand(commandModelFromRepo);
+            _repository.SaveChanges();
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public ActionResult DeleteCommand(int id)
+        {
+            var commandModelFromRepo = _repository.GetCommandById(id);
+            if (commandModelFromRepo is null)
+                return NotFound();
+
+            _repository.DeleteCommand(commandModelFromRepo);
             _repository.SaveChanges();
 
             return NoContent();
